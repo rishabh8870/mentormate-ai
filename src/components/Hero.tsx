@@ -28,9 +28,11 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="bg-gradient-accent shadow-medium hover:shadow-strong transition-all">
-              Get Started Free
-            </Button>
+            <Link to="/ai-assistant">
+              <Button size="lg" className="bg-gradient-accent shadow-medium hover:shadow-strong transition-all w-full sm:w-auto">
+                Try AI Assistant
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-2">
               Learn More
             </Button>

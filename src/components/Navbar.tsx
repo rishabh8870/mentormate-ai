@@ -21,6 +21,9 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center gap-8">
+            <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors">
+              AI Assistant
+            </Link>
             <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
               Features
             </Link>
@@ -53,6 +56,9 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
+              <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors">
+                AI Assistant
+              </Link>
               <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
                 Features
               </Link>
