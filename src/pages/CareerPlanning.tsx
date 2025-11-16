@@ -6,10 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Target, TrendingUp, Award, Plus, Sparkles } from "lucide-react";
+import { Target, TrendingUp, Award, Plus, Sparkles, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const CareerPlanning = () => {
+  const { toast } = useToast();
   const [goals, setGoals] = useState([
     { id: 1, title: "Complete Data Science Certification", progress: 65, deadline: "Dec 2025" },
     { id: 2, title: "Land Software Engineering Internship", progress: 30, deadline: "Summer 2025" },
@@ -21,6 +24,132 @@ const CareerPlanning = () => {
     { id: 3, name: "React", level: 65 },
     { id: 4, name: "Machine Learning", level: 45 },
   ]);
+
+  const [coachInput, setCoachInput] = useState("");
+  const [coachResponse, setCoachResponse] = useState("");
+  const [isCoachLoading, setIsCoachLoading] = useState(false);
+
+  const [targetRole, setTargetRole] = useState("");
+  const [skillGapResponse, setSkillGapResponse] = useState("");
+  const [isSkillGapLoading, setIsSkillGapLoading] = useState(false);
+
+  const [roadmapResponse, setRoadmapResponse] = useState("");
+  const [isRoadmapLoading, setIsRoadmapLoading] = useState(false);
+
+  const handleCoachQuery = async () => {
+    if (!coachInput.trim()) {
+      toast({
+        title: "Input required",
+        description: "Please enter your question or describe your situation",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCoachLoading(true);
+    setCoachResponse("");
+
+    try {
+      const { data, error } = await supabase.functions.invoke('career-ai', {
+        body: {
+          type: 'coach',
+          prompt: coachInput,
+          goals,
+          skills,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      setCoachResponse(data.response);
+    } catch (error: any) {
+      console.error('Coach query error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to get AI guidance. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCoachLoading(false);
+    }
+  };
+
+  const handleSkillGapAnalysis = async () => {
+    if (!targetRole.trim()) {
+      toast({
+        title: "Input required",
+        description: "Please enter a target role",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSkillGapLoading(true);
+    setSkillGapResponse("");
+
+    try {
+      const { data, error } = await supabase.functions.invoke('career-ai', {
+        body: {
+          type: 'skill-gap',
+          targetRole,
+          skills,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      setSkillGapResponse(data.response);
+    } catch (error: any) {
+      console.error('Skill gap analysis error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to analyze skill gaps. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSkillGapLoading(false);
+    }
+  };
+
+  const handleRoadmapGeneration = async () => {
+    setIsRoadmapLoading(true);
+    setRoadmapResponse("");
+
+    try {
+      const { data, error } = await supabase.functions.invoke('career-ai', {
+        body: {
+          type: 'roadmap',
+          goals,
+          skills,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      setRoadmapResponse(data.response);
+    } catch (error: any) {
+      console.error('Roadmap generation error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to generate roadmap. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRoadmapLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -98,10 +227,29 @@ const CareerPlanning = () => {
                   <Textarea 
                     placeholder="Ask about your career path, next steps, or get goal recommendations..."
                     className="min-h-[100px]"
+                    value={coachInput}
+                    onChange={(e) => setCoachInput(e.target.value)}
+                    disabled={isCoachLoading}
                   />
-                  <Button className="w-full bg-gradient-accent">
-                    Get AI Guidance
+                  <Button 
+                    className="w-full bg-gradient-accent" 
+                    onClick={handleCoachQuery}
+                    disabled={isCoachLoading}
+                  >
+                    {isCoachLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Getting AI Guidance...
+                      </>
+                    ) : (
+                      'Get AI Guidance'
+                    )}
                   </Button>
+                  {coachResponse && (
+                    <div className="mt-4 p-4 rounded-lg bg-background/50 border border-border">
+                      <p className="text-sm whitespace-pre-wrap">{coachResponse}</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -148,10 +296,31 @@ const CareerPlanning = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <Input placeholder="Enter target role (e.g., Senior Developer)" />
-                    <Button className="w-full bg-gradient-accent">
-                      Analyze Skill Gaps
+                    <Input 
+                      placeholder="Enter target role (e.g., Senior Developer)" 
+                      value={targetRole}
+                      onChange={(e) => setTargetRole(e.target.value)}
+                      disabled={isSkillGapLoading}
+                    />
+                    <Button 
+                      className="w-full bg-gradient-accent"
+                      onClick={handleSkillGapAnalysis}
+                      disabled={isSkillGapLoading}
+                    >
+                      {isSkillGapLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        'Analyze Skill Gaps'
+                      )}
                     </Button>
+                    {skillGapResponse && (
+                      <div className="mt-4 p-4 rounded-lg bg-background/50 border border-border">
+                        <p className="text-sm whitespace-pre-wrap">{skillGapResponse}</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -220,10 +389,30 @@ const CareerPlanning = () => {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-hero" size="lg">
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Get Personalized Career Roadmap
+                  <Button 
+                    className="w-full bg-gradient-hero" 
+                    size="lg"
+                    onClick={handleRoadmapGeneration}
+                    disabled={isRoadmapLoading}
+                  >
+                    {isRoadmapLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating Roadmap...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Get Personalized Career Roadmap
+                      </>
+                    )}
                   </Button>
+                  {roadmapResponse && (
+                    <div className="mt-4 p-6 rounded-lg bg-background/50 border border-border">
+                      <h3 className="font-semibold mb-3">Your Personalized Career Roadmap</h3>
+                      <p className="text-sm whitespace-pre-wrap">{roadmapResponse}</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
