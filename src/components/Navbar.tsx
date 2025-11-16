@@ -24,6 +24,9 @@ const Navbar = () => {
             <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors">
               AI Assistant
             </Link>
+            <Link to="/career-planning" className="text-sm font-medium hover:text-primary transition-colors">
+              Career Planning
+            </Link>
             <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
               Features
             </Link>
@@ -58,6 +61,9 @@ const Navbar = () => {
             <div className="flex flex-col gap-4">
               <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors">
                 AI Assistant
+              </Link>
+              <Link to="/career-planning" className="text-sm font-medium hover:text-primary transition-colors">
+                Career Planning
               </Link>
               <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
                 Features
