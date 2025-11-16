@@ -40,27 +40,31 @@ const Hero = () => {
           
           {/* Feature cards */}
           <div className="grid md:grid-cols-3 gap-6 mt-20">
-            <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border">
-              <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
-                <BookOpen className="w-6 h-6 text-white" />
+            <Link to="/ai-assistant" className="block">
+              <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border cursor-pointer hover:scale-105 hover:border-primary/50">
+                <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">AI Study Assistant</h3>
+                <p className="text-muted-foreground text-sm">
+                  Get instant answers, summaries, and personalized study materials
+                </p>
               </div>
-              <h3 className="text-lg font-semibold mb-2">AI Study Assistant</h3>
-              <p className="text-muted-foreground text-sm">
-                Get instant answers, summaries, and personalized study materials
-              </p>
-            </div>
+            </Link>
             
-            <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border">
-              <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
-                <Target className="w-6 h-6 text-white" />
+            <Link to="/career-planning" className="block">
+              <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border cursor-pointer hover:scale-105 hover:border-primary/50">
+                <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Career Planning</h3>
+                <p className="text-muted-foreground text-sm">
+                  AI resume analysis and interview preparation with real-time feedback
+                </p>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Career Planning</h3>
-              <p className="text-muted-foreground text-sm">
-                AI resume analysis and interview preparation with real-time feedback
-              </p>
-            </div>
+            </Link>
             
-            <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border">
+            <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border opacity-75">
               <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
                 <Users className="w-6 h-6 text-white" />
               </div>
