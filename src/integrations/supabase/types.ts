@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      code_versions: {
+        Row: {
+          content: string
+          created_at: string | null
+          file_id: string
+          id: string
+          saved_by: string
+          version_number: number
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          file_id: string
+          id?: string
+          saved_by: string
+          version_number?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          file_id?: string
+          id?: string
+          saved_by?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "code_versions_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "room_files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coding_rooms: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          invite_code: string
+          is_active: boolean | null
+          language: string
+          last_active: string | null
+          name: string
+          project_title: string | null
+          tech_stack: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          invite_code?: string
+          is_active?: boolean | null
+          language?: string
+          last_active?: string | null
+          name: string
+          project_title?: string | null
+          tech_stack?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          invite_code?: string
+          is_active?: boolean | null
+          language?: string
+          last_active?: string | null
+          name?: string
+          project_title?: string | null
+          tech_stack?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       group_members: {
         Row: {
           group_id: string
@@ -138,6 +215,164 @@ export type Database = {
         }
         Relationships: []
       }
+      room_files: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          created_by: string
+          file_name: string
+          file_path: string
+          id: string
+          language: string | null
+          room_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          created_by: string
+          file_name: string
+          file_path: string
+          id?: string
+          language?: string | null
+          room_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          created_by?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          language?: string | null
+          room_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_files_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "coding_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_members: {
+        Row: {
+          color: string | null
+          id: string
+          joined_at: string | null
+          role: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          id?: string
+          joined_at?: string | null
+          role?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "coding_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "coding_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_tasks: {
+        Row: {
+          assigned_to: string | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          priority: string | null
+          room_id: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          priority?: string | null
+          room_id: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          priority?: string | null
+          room_id?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_tasks_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "coding_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_files: {
         Row: {
           created_at: string | null
@@ -184,7 +419,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_room_member: {
+        Args: { _room_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_room_owner: {
+        Args: { _room_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
