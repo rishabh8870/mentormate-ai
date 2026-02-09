@@ -64,15 +64,17 @@ const Hero = () => {
               </div>
             </Link>
             
-            <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border opacity-75">
-              <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
-                <Users className="w-6 h-6 text-white" />
+            <Link to="/collaboration" className="block">
+              <div className="p-6 rounded-2xl bg-card shadow-soft hover:shadow-medium transition-all border border-border cursor-pointer hover:scale-105 hover:border-primary/50">
+                <div className="w-12 h-12 rounded-xl bg-gradient-hero flex items-center justify-center mb-4 mx-auto">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Collaboration Hub</h3>
+                <p className="text-muted-foreground text-sm">
+                  Code together in real-time with your team
+                </p>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Collaboration Hub</h3>
-              <p className="text-muted-foreground text-sm">
-                Connect with peers, join study groups, and share resources
-              </p>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

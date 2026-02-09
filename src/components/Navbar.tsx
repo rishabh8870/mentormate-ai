@@ -27,8 +27,8 @@ const Navbar = () => {
             <Link to="/career-planning" className="text-sm font-medium hover:text-primary transition-colors">
               Career Planning
             </Link>
-            <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
-              Features
+            <Link to="/collaboration" className="text-sm font-medium hover:text-primary transition-colors">
+              Collaboration Hub
             </Link>
             <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
               Pricing
@@ -65,8 +65,8 @@ const Navbar = () => {
               <Link to="/career-planning" className="text-sm font-medium hover:text-primary transition-colors">
                 Career Planning
               </Link>
-              <Link to="/features" className="text-sm font-medium hover:text-primary transition-colors">
-                Features
+              <Link to="/collaboration" className="text-sm font-medium hover:text-primary transition-colors">
+                Collaboration Hub
               </Link>
               <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
                 Pricing
