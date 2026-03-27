@@ -50,9 +50,10 @@ const Auth = () => {
       });
       if (error) throw error;
       toast({
-        title: "Check your email",
-        description: "We sent you a confirmation link. Please verify your email before signing in.",
+        title: "Account created!",
+        description: "You are now signed in.",
       });
+      navigate("/collaboration");
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
     } finally {

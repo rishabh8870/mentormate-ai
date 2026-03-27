@@ -119,18 +119,26 @@ const CollaborationHub = () => {
         return;
       }
 
+      // Check if already a member
+      const { data: existingMember } = await supabase
+        .from("room_members")
+        .select("id")
+        .eq("room_id", room.id)
+        .eq("user_id", user!.id)
+        .maybeSingle();
+
+      if (existingMember) {
+        navigate(`/collaboration/${room.id}`);
+        return;
+      }
+
       const { error: joinError } = await supabase
         .from("room_members")
         .insert({ room_id: room.id, user_id: user!.id });
 
-      if (joinError) {
-        if (joinError.code === "23505") {
-          navigate(`/collaboration/${room.id}`);
-          return;
-        }
-        throw joinError;
-      }
+      if (joinError) throw joinError;
 
+      toast({ title: "Joined!", description: "You've joined the coding room." });
       navigate(`/collaboration/${room.id}`);
     } catch (error: any) {
       toast({ title: "Error joining room", description: error.message, variant: "destructive" });
