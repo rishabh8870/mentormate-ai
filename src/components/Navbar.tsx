@@ -38,12 +38,6 @@ const Navbar = () => {
             <Link to="/collaboration" className="text-sm font-medium hover:text-primary transition-colors">
               Collaboration Hub
             </Link>
-            <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
-              Pricing
-            </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-              About
-            </Link>
             <div className="flex items-center gap-3">
               {!loading && user ? (
                 <>
@@ -85,12 +79,6 @@ const Navbar = () => {
               </Link>
               <Link to="/collaboration" className="text-sm font-medium hover:text-primary transition-colors">
                 Collaboration Hub
-              </Link>
-              <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
-                Pricing
-              </Link>
-              <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-                About
               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 {!loading && user ? (
