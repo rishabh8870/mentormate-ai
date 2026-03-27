@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User, Loader2 } from "lucide-react";
+import { Send, Bot, User, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   role: "user" | "assistant";
@@ -167,13 +169,21 @@ const ChatInterface = () => {
                 </div>
               )}
               <Card
-                className={`p-4 max-w-[80%] ${
+                className={`max-w-[80%] ${
                   message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card"
+                    ? "bg-primary text-primary-foreground p-4"
+                    : "bg-card p-4"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                {message.role === "user" ? (
+                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                ) : (
+                  <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-a:text-primary prose-li:text-foreground">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </Card>
               {message.role === "user" && (
                 <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shrink-0">

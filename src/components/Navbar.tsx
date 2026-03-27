@@ -1,10 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { GraduationCap, Menu } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { GraduationCap, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, loading, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -37,20 +45,30 @@ const Navbar = () => {
               About
             </Link>
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm">
-                Sign In
-              </Button>
-              <Button size="sm" className="bg-gradient-accent">
-                Get Started
-              </Button>
+              {!loading && user ? (
+                <>
+                  <span className="text-xs text-muted-foreground truncate max-w-[120px]">
+                    {user.email}
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                    <LogOut className="w-4 h-4 mr-1" /> Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="ghost" size="sm">Sign In</Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button size="sm" className="bg-gradient-accent">Get Started</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsOpen(!isOpen)}
-          >
+          <button className="md:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
             <Menu className="w-6 h-6" />
           </button>
         </div>
@@ -75,12 +93,20 @@ const Navbar = () => {
                 About
               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" size="sm">
-                  Sign In
-                </Button>
-                <Button size="sm" className="bg-gradient-accent">
-                  Get Started
-                </Button>
+                {!loading && user ? (
+                  <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                    <LogOut className="w-4 h-4 mr-1" /> Sign Out
+                  </Button>
+                ) : (
+                  <>
+                    <Link to="/auth">
+                      <Button variant="ghost" size="sm" className="w-full">Sign In</Button>
+                    </Link>
+                    <Link to="/auth">
+                      <Button size="sm" className="w-full bg-gradient-accent">Get Started</Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
