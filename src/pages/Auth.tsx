@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, Loader2 } from "lucide-react";
 
 const Auth = () => {
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && user) navigate("/collaboration");
+  }, [user, authLoading, navigate]);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
@@ -50,9 +56,10 @@ const Auth = () => {
       });
       if (error) throw error;
       toast({
-        title: "Check your email",
-        description: "We sent you a confirmation link. Please verify your email before signing in.",
+        title: "Account created!",
+        description: "You are now signed in.",
       });
+      navigate("/collaboration");
     } catch (error: any) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
     } finally {
