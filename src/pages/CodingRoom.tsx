@@ -44,6 +44,21 @@ const CodingRoom = () => {
   const [rightTab, setRightTab] = useState("chat");
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
+  // Track presence
+  useEffect(() => {
+    if (!user || !roomId) return;
+    const presenceChannel = supabase.channel(`presence-${roomId}`);
+    presenceChannel
+      .on("presence", { event: "sync" }, () => {})
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          await presenceChannel.track({ user_id: user.id, online_at: new Date().toISOString() });
+        }
+      });
+
+    return () => { supabase.removeChannel(presenceChannel); };
+  }, [user, roomId]);
+
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
   }, [user, authLoading, navigate]);
@@ -55,7 +70,6 @@ const CodingRoom = () => {
     }
   }, [user, roomId]);
 
-  // Auto-save every 3 seconds when code changes
   useEffect(() => {
     if (currentFile && saveStatus === "unsaved") {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -64,13 +78,12 @@ const CodingRoom = () => {
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
   }, [code, saveStatus]);
 
-  // Realtime subscription for file content updates
+  // Realtime file content sync
   useEffect(() => {
     if (!currentFile) return;
     const channel = supabase
       .channel(`file-${currentFile.id}`)
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "room_files", filter: `id=eq.${currentFile.id}` }, (payload) => {
-        // Only update if someone else changed it
         if (payload.new && (payload.new as any).content !== code) {
           setCode((payload.new as any).content || "");
         }
@@ -98,7 +111,6 @@ const CodingRoom = () => {
       setCode(files[0].content || "");
       setLanguage(files[0].language || "javascript");
     } else {
-      // Create default file
       const ext = language === "python" ? "py" : language === "java" ? "java" : language === "cpp" ? "cpp" : language === "c" ? "c" : language === "html" ? "html" : language === "sql" ? "sql" : "js";
       const { data: newFile } = await supabase
         .from("room_files")
@@ -144,7 +156,6 @@ const CodingRoom = () => {
     setSaveStatus("saving");
     try {
       await supabase.from("room_files").update({ content: code, updated_at: new Date().toISOString() }).eq("id", currentFile.id);
-      // Save version
       await supabase.from("code_versions").insert({
         file_id: currentFile.id,
         content: code,
@@ -221,7 +232,7 @@ const CodingRoom = () => {
           <Button size="sm" variant="outline" onClick={saveCode} disabled={saving || saveStatus === "saved"}>
             <Save className="w-3 h-3 mr-1" /> Save
           </Button>
-          <Button size="sm" className="bg-gradient-hero" onClick={handleRun}>
+          <Button size="sm" onClick={handleRun}>
             <Play className="w-3 h-3 mr-1" /> Run
           </Button>
         </div>
@@ -229,7 +240,6 @@ const CodingRoom = () => {
 
       {/* Main layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* File sidebar */}
         <RoomSidebar roomId={roomId!} userId={user!.id} currentFileId={currentFile?.id} onSelectFile={handleSelectFile} language={language} />
 
         {/* Code editor */}
@@ -237,7 +247,6 @@ const CodingRoom = () => {
           <div className="flex-1 min-h-0">
             <CodeEditorPanel code={code} language={monacoLang} onChange={handleCodeChange} />
           </div>
-          {/* Output console */}
           {output && (
             <div className="h-32 border-t border-border bg-card p-3 overflow-auto">
               <div className="flex items-center justify-between mb-1">
@@ -264,7 +273,7 @@ const CodingRoom = () => {
                 <RoomChat roomId={roomId!} userId={user!.id} />
               </TabsContent>
               <TabsContent value="members" className="h-full m-0 p-3 overflow-auto">
-                <RoomMembers roomId={roomId!} />
+                <RoomMembers roomId={roomId!} inviteCode={room.invite_code} />
               </TabsContent>
               <TabsContent value="tasks" className="h-full m-0 p-3 overflow-auto">
                 <RoomTasks roomId={roomId!} userId={user!.id} />
