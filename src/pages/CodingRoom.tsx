@@ -246,8 +246,8 @@ const CodingRoom = () => {
           <Button size="sm" variant="outline" onClick={saveCode} disabled={saving || saveStatus === "saved"}>
             <Save className="w-3 h-3 mr-1" /> Save
           </Button>
-          <Button size="sm" onClick={handleRun}>
-            <Play className="w-3 h-3 mr-1" /> Run
+          <Button size="sm" onClick={handleRun} disabled={running}>
+            {running ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Play className="w-3 h-3 mr-1" />} Run
           </Button>
         </div>
       </header>
