@@ -184,8 +184,22 @@ const CodingRoom = () => {
     }
   };
 
-  const handleRun = () => {
-    setOutput("⚠️ Code execution requires an external runtime (Judge0 API). Coming soon!\n\nFor now, use the AI Assistant to analyze and debug your code.");
+  const [running, setRunning] = useState(false);
+
+  const handleRun = async () => {
+    setRunning(true);
+    setOutput("▶ Running...");
+    try {
+      const { data, error } = await supabase.functions.invoke("run-code", {
+        body: { code, language },
+      });
+      if (error) throw error;
+      setOutput(data?.output || "No output");
+    } catch (e: any) {
+      setOutput(`❌ Error: ${e.message}`);
+    } finally {
+      setRunning(false);
+    }
   };
 
   if (authLoading || !room) {
