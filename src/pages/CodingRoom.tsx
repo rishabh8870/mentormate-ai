@@ -10,6 +10,7 @@ import RoomTasks from "@/components/collaboration/RoomTasks";
 import RoomFiles from "@/components/collaboration/RoomFiles";
 import RoomMembers from "@/components/collaboration/RoomMembers";
 import AiCodeAssistant from "@/components/collaboration/AiCodeAssistant";
+import CodingTimer from "@/components/collaboration/CodingTimer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -230,6 +231,7 @@ const CodingRoom = () => {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          <CodingTimer roomId={roomId!} userId={user!.id} />
           <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger className="w-32 h-8 text-xs">
               <SelectValue />

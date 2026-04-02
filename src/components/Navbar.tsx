@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, Menu, LogOut, User } from "lucide-react";
+import { GraduationCap, Menu, LogOut, User, Shield } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -41,6 +43,13 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               {!loading && user ? (
                 <>
+                  {isAdmin && (
+                    <Link to="/admin">
+                      <Button variant="ghost" size="sm">
+                        <Shield className="w-4 h-4 mr-1" /> Admin
+                      </Button>
+                    </Link>
+                  )}
                   <Link to="/profile">
                     <Button variant="ghost" size="sm">
                       <User className="w-4 h-4 mr-1" /> Profile

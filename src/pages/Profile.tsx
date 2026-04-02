@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
-import { User, Pencil, Save, X, Code, Users, Calendar, Mail } from "lucide-react";
+import { User, Pencil, Save, X, Code, Users, Calendar, Mail, Timer } from "lucide-react";
 
 const Profile = () => {
   const { userId } = useParams();
@@ -19,7 +19,7 @@ const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-  const [stats, setStats] = useState({ rooms: 0, groups: 0 });
+  const [stats, setStats] = useState({ rooms: 0, groups: 0, totalCodingSeconds: 0, sessions: 0 });
   const [form, setForm] = useState({ full_name: "", username: "", bio: "", avatar_url: "" });
 
   const isOwnProfile = !userId || userId === user?.id;
@@ -52,13 +52,17 @@ const Profile = () => {
   };
 
   const fetchStats = async () => {
-    const [roomRes, groupRes] = await Promise.all([
+    const [roomRes, groupRes, sessionsRes] = await Promise.all([
       supabase.from("room_members").select("id", { count: "exact", head: true }).eq("user_id", targetUserId!),
       supabase.from("group_members").select("id", { count: "exact", head: true }).eq("user_id", targetUserId!),
+      supabase.from("coding_sessions").select("duration_seconds").eq("user_id", targetUserId!),
     ]);
+    const totalSeconds = (sessionsRes.data || []).reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
     setStats({
       rooms: roomRes.count || 0,
       groups: groupRes.count || 0,
+      totalCodingSeconds: totalSeconds,
+      sessions: sessionsRes.data?.length || 0,
     });
   };
 
@@ -233,6 +237,22 @@ const Profile = () => {
                   <Users className="w-5 h-5 mx-auto mb-1 text-secondary" />
                   <p className="text-2xl font-bold">{stats.groups}</p>
                   <p className="text-xs text-muted-foreground">Groups</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <Timer className="w-5 h-5 mx-auto mb-1 text-primary" />
+                  <p className="text-2xl font-bold">
+                    {stats.totalCodingSeconds >= 3600
+                      ? `${Math.floor(stats.totalCodingSeconds / 3600)}h`
+                      : `${Math.floor(stats.totalCodingSeconds / 60)}m`}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Coding Time</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <Code className="w-5 h-5 mx-auto mb-1 text-accent" />
+                  <p className="text-2xl font-bold">{stats.sessions}</p>
+                  <p className="text-xs text-muted-foreground">Sessions</p>
                 </div>
               </div>
             </CardContent>
