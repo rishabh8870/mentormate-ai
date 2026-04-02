@@ -93,8 +93,7 @@ const Navbar = () => {
                     <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
                       <LogOut className="w-4 h-4 mr-1" /> Sign Out
                     </Button>
-                  
-                  </Button>
+                  </>
                 ) : (
                   <>
                     <Link to="/auth">
