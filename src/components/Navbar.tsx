@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, Menu, LogOut } from "lucide-react";
+import { GraduationCap, Menu, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -41,9 +41,11 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               {!loading && user ? (
                 <>
-                  <span className="text-xs text-muted-foreground truncate max-w-[120px]">
-                    {user.email}
-                  </span>
+                  <Link to="/profile">
+                    <Button variant="ghost" size="sm">
+                      <User className="w-4 h-4 mr-1" /> Profile
+                    </Button>
+                  </Link>
                   <Button variant="ghost" size="sm" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-1" /> Sign Out
                   </Button>
@@ -82,9 +84,16 @@ const Navbar = () => {
               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 {!loading && user ? (
-                  <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-1" /> Sign Out
-                  </Button>
+                  <>
+                    <Link to="/profile">
+                      <Button variant="ghost" size="sm" className="w-full justify-start">
+                        <User className="w-4 h-4 mr-1" /> Profile
+                      </Button>
+                    </Link>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
+                      <LogOut className="w-4 h-4 mr-1" /> Sign Out
+                    </Button>
+                  </>
                 ) : (
                   <>
                     <Link to="/auth">
