@@ -10,6 +10,7 @@ import RoomTasks from "@/components/collaboration/RoomTasks";
 import RoomFiles from "@/components/collaboration/RoomFiles";
 import RoomMembers from "@/components/collaboration/RoomMembers";
 import AiCodeAssistant from "@/components/collaboration/AiCodeAssistant";
+import CodingTimer from "@/components/collaboration/CodingTimer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
