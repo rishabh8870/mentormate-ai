@@ -84,8 +84,16 @@ const Navbar = () => {
               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 {!loading && user ? (
-                  <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-1" /> Sign Out
+                  <>
+                    <Link to="/profile">
+                      <Button variant="ghost" size="sm" className="w-full justify-start">
+                        <User className="w-4 h-4 mr-1" /> Profile
+                      </Button>
+                    </Link>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
+                      <LogOut className="w-4 h-4 mr-1" /> Sign Out
+                    </Button>
+                  
                   </Button>
                 ) : (
                   <>
