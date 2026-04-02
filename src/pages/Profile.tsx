@@ -239,6 +239,22 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground">Groups</p>
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <Timer className="w-5 h-5 mx-auto mb-1 text-primary" />
+                  <p className="text-2xl font-bold">
+                    {stats.totalCodingSeconds >= 3600
+                      ? `${Math.floor(stats.totalCodingSeconds / 3600)}h`
+                      : `${Math.floor(stats.totalCodingSeconds / 60)}m`}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Coding Time</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-muted/50">
+                  <Code className="w-5 h-5 mx-auto mb-1 text-accent" />
+                  <p className="text-2xl font-bold">{stats.sessions}</p>
+                  <p className="text-xs text-muted-foreground">Sessions</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
