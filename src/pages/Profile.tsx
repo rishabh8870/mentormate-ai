@@ -19,7 +19,7 @@ const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-  const [stats, setStats] = useState({ rooms: 0, groups: 0 });
+  const [stats, setStats] = useState({ rooms: 0, groups: 0, totalCodingSeconds: 0, sessions: 0 });
   const [form, setForm] = useState({ full_name: "", username: "", bio: "", avatar_url: "" });
 
   const isOwnProfile = !userId || userId === user?.id;
