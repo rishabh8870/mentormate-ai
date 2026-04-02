@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Shield, Trash2, Plus, Code2, Users, Loader2, Clock, AlertTriangle,
+  Shield, Trash2, Plus, Code2, Users, Loader2, Clock,
 } from "lucide-react";
 
 const LANGUAGES = [
