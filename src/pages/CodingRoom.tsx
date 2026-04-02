@@ -231,6 +231,7 @@ const CodingRoom = () => {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          <CodingTimer roomId={roomId!} userId={user!.id} />
           <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger className="w-32 h-8 text-xs">
               <SelectValue />

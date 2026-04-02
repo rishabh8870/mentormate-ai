@@ -8,6 +8,7 @@ import { useAdmin } from "@/hooks/useAdmin";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
