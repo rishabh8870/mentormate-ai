@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
-import { User, Pencil, Save, X, Code, Users, Calendar, Mail } from "lucide-react";
+import { User, Pencil, Save, X, Code, Users, Calendar, Mail, Timer } from "lucide-react";
 
 const Profile = () => {
   const { userId } = useParams();
