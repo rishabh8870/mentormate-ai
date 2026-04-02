@@ -52,13 +52,17 @@ const Profile = () => {
   };
 
   const fetchStats = async () => {
-    const [roomRes, groupRes] = await Promise.all([
+    const [roomRes, groupRes, sessionsRes] = await Promise.all([
       supabase.from("room_members").select("id", { count: "exact", head: true }).eq("user_id", targetUserId!),
       supabase.from("group_members").select("id", { count: "exact", head: true }).eq("user_id", targetUserId!),
+      supabase.from("coding_sessions").select("duration_seconds").eq("user_id", targetUserId!),
     ]);
+    const totalSeconds = (sessionsRes.data || []).reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
     setStats({
       rooms: roomRes.count || 0,
       groups: groupRes.count || 0,
+      totalCodingSeconds: totalSeconds,
+      sessions: sessionsRes.data?.length || 0,
     });
   };
 
