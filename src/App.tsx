@@ -9,6 +9,7 @@ import CareerPlanning from "./pages/CareerPlanning";
 import Auth from "./pages/Auth";
 import CollaborationHub from "./pages/CollaborationHub";
 import CodingRoom from "./pages/CodingRoom";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
