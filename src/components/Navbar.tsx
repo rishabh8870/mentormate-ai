@@ -41,9 +41,11 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               {!loading && user ? (
                 <>
-                  <span className="text-xs text-muted-foreground truncate max-w-[120px]">
-                    {user.email}
-                  </span>
+                  <Link to="/profile">
+                    <Button variant="ghost" size="sm">
+                      <User className="w-4 h-4 mr-1" /> Profile
+                    </Button>
+                  </Link>
                   <Button variant="ghost" size="sm" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-1" /> Sign Out
                   </Button>
