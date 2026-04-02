@@ -43,6 +43,13 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               {!loading && user ? (
                 <>
+                  {isAdmin && (
+                    <Link to="/admin">
+                      <Button variant="ghost" size="sm">
+                        <Shield className="w-4 h-4 mr-1" /> Admin
+                      </Button>
+                    </Link>
+                  )}
                   <Link to="/profile">
                     <Button variant="ghost" size="sm">
                       <User className="w-4 h-4 mr-1" /> Profile
