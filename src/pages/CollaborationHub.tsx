@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Code2, Plus, Users, Clock, LogIn, Loader2, Globe, Lock, Copy, Check, Search } from "lucide-react";
+import { Code2, Plus, Users, Clock, LogIn, Loader2, Globe, Lock, Copy, Check, Search, Trash2 } from "lucide-react";
 
 const LANGUAGES = [
   { value: "javascript", label: "JavaScript" },
@@ -40,6 +41,7 @@ interface CodingRoom {
 
 const CollaborationHub = () => {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [myRooms, setMyRooms] = useState<CodingRoom[]>([]);
@@ -197,6 +199,18 @@ const CollaborationHub = () => {
     }
   };
 
+  const deleteRoom = async (roomId: string) => {
+    try {
+      const { error } = await supabase.from("coding_rooms").delete().eq("id", roomId);
+      if (error) throw error;
+      setMyRooms((prev) => prev.filter((r) => r.id !== roomId));
+      setPublicRooms((prev) => prev.filter((r) => r.id !== roomId));
+      toast({ title: "Room deleted", description: "The coding room has been removed." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  };
+
   const copyInviteCode = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -256,6 +270,16 @@ const CollaborationHub = () => {
           >
             {copiedCode === room.invite_code ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
           </Button>
+          {isAdmin && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 text-xs text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              onClick={(e) => { e.stopPropagation(); deleteRoom(room.id); }}
+            >
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
