@@ -101,8 +101,8 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
-                  <Input id="login-email" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+                  <Label htmlFor="login-email">Email or Username</Label>
+                  <Input id="login-email" type="text" placeholder="Enter email or username" value={loginIdentifier} onChange={(e) => setLoginIdentifier(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Password</Label>
