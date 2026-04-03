@@ -1,25 +1,22 @@
-## Plan
 
-### 1. Database Changes (Migration)
-- Create `user_roles` table (admin role management)
-- Create `coding_sessions` table (track user coding time per room)
-- Add RLS policies for both tables
 
-### 2. Admin Page
-- `/admin` route, only accessible to users with admin role
-- Dashboard showing all coding rooms, users
-- Ability to delete any coding room
-- Create new rooms directly
+## Plan: Add Admin Delete Button to Collaboration Hub Room Cards
 
-### 3. Coding Timer
-- Timer component in the CodingRoom page
-- Start/stop button for users
-- Auto-stop after 3 minutes of no activity (no mouse/keyboard)
-- Saves session duration to `coding_sessions` table
+### Problem
+The admin can delete rooms from the Admin Dashboard, but not directly from the Collaboration Hub page where they browse rooms. The `RoomCard` component has no delete button for admins.
 
-### 4. Profile Updates
-- Show total coding time on profile page
-- Show recent sessions breakdown
+### Changes
 
-### 5. Navbar Update
-- Show "Admin" link only for admin users
+**File: `src/pages/CollaborationHub.tsx`**
+
+1. Import `useAdmin` hook and `Trash2` icon
+2. Add `deleteRoom` function (same pattern as Admin page — calls `supabase.from("coding_rooms").delete()`)
+3. Add a delete button (red trash icon) to the `RoomCard` component, visible only when `isAdmin` is true
+4. After deletion, remove the room from both `myRooms` and `publicRooms` state arrays and show a toast
+
+### Technical Details
+- The RLS policy `"Admins can delete any room"` already exists, so the database layer is ready
+- The delete button will appear alongside the existing Open/Copy buttons in the card footer
+- Uses the existing `useAdmin` hook from `src/hooks/useAdmin.tsx`
+- No database changes needed
+
