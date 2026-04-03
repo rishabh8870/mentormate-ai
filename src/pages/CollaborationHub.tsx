@@ -41,6 +41,7 @@ interface CodingRoom {
 
 const CollaborationHub = () => {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [myRooms, setMyRooms] = useState<CodingRoom[]>([]);
