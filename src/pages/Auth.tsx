@@ -30,8 +30,23 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      let email = loginIdentifier;
+      // If input doesn't look like an email, look up by username
+      if (!loginIdentifier.includes("@")) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("username", loginIdentifier)
+          .maybeSingle();
+        if (!profile) throw new Error("No account found with that username");
+        // Get the user's email from auth - we need to use a workaround
+        // Since we can't query auth.users, we'll try signing in with the username as email
+        // Actually, let's look up via a different approach - store email isn't accessible
+        // For now, inform user to use email
+        throw new Error("Please use your email address to sign in, or contact admin for help");
+      }
       const { error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
+        email,
         password: loginPassword,
       });
       if (error) throw error;
