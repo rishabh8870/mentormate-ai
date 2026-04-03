@@ -199,6 +199,18 @@ const CollaborationHub = () => {
     }
   };
 
+  const deleteRoom = async (roomId: string) => {
+    try {
+      const { error } = await supabase.from("coding_rooms").delete().eq("id", roomId);
+      if (error) throw error;
+      setMyRooms((prev) => prev.filter((r) => r.id !== roomId));
+      setPublicRooms((prev) => prev.filter((r) => r.id !== roomId));
+      toast({ title: "Room deleted", description: "The coding room has been removed." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  };
+
   const copyInviteCode = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -258,6 +270,16 @@ const CollaborationHub = () => {
           >
             {copiedCode === room.invite_code ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
           </Button>
+          {isAdmin && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 text-xs text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              onClick={(e) => { e.stopPropagation(); deleteRoom(room.id); }}
+            >
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
