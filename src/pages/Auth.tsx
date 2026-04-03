@@ -19,7 +19,7 @@ const Auth = () => {
   }, [user, authLoading, navigate]);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
+  const [loginIdentifier, setLoginIdentifier] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
@@ -30,8 +30,17 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      let email = loginIdentifier.trim();
+      // If input doesn't look like an email, resolve username to email
+      if (!email.includes("@")) {
+        const { data, error: rpcError } = await supabase.rpc("get_email_by_username", {
+          _username: email,
+        });
+        if (rpcError || !data) throw new Error("No account found with that username");
+        email = data as string;
+      }
       const { error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
+        email,
         password: loginPassword,
       });
       if (error) throw error;
@@ -86,8 +95,8 @@ const Auth = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
-                  <Input id="login-email" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+                  <Label htmlFor="login-email">Email or Username</Label>
+                  <Input id="login-email" type="text" placeholder="Enter email or username" value={loginIdentifier} onChange={(e) => setLoginIdentifier(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Password</Label>
