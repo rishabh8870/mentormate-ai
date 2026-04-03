@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Code2, Plus, Users, Clock, LogIn, Loader2, Globe, Lock, Copy, Check, Search } from "lucide-react";
+import { Code2, Plus, Users, Clock, LogIn, Loader2, Globe, Lock, Copy, Check, Search, Trash2 } from "lucide-react";
 
 const LANGUAGES = [
   { value: "javascript", label: "JavaScript" },
