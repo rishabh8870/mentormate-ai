@@ -42,6 +42,31 @@ const CareerPlanning = () => {
   const [newSkillName, setNewSkillName] = useState("");
   const [newSkillLevel, setNewSkillLevel] = useState("50");
 
+  const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
+  const [newGoalTitle, setNewGoalTitle] = useState("");
+  const [newGoalDeadline, setNewGoalDeadline] = useState("");
+  const [newGoalProgress, setNewGoalProgress] = useState("0");
+
+  const handleAddGoal = () => {
+    const title = newGoalTitle.trim();
+    const deadline = newGoalDeadline.trim();
+    const progress = Math.max(0, Math.min(100, parseInt(newGoalProgress) || 0));
+    if (!title) {
+      toast({ title: "Goal title required", description: "Please enter a goal title", variant: "destructive" });
+      return;
+    }
+    if (!deadline) {
+      toast({ title: "Deadline required", description: "Please enter a deadline", variant: "destructive" });
+      return;
+    }
+    setGoals((prev) => [...prev, { id: Date.now(), title, progress, deadline }]);
+    setNewGoalTitle("");
+    setNewGoalDeadline("");
+    setNewGoalProgress("0");
+    setIsGoalDialogOpen(false);
+    toast({ title: "Goal added", description: `${title} added to your career goals` });
+  };
+
   const handleAddSkill = () => {
     const name = newSkillName.trim();
     const level = Math.max(0, Math.min(100, parseInt(newSkillLevel) || 0));
