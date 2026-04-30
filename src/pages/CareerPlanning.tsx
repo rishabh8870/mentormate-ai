@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { Target, TrendingUp, Award, Plus, Sparkles, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +37,24 @@ const CareerPlanning = () => {
 
   const [roadmapResponse, setRoadmapResponse] = useState("");
   const [isRoadmapLoading, setIsRoadmapLoading] = useState(false);
+
+  const [isSkillDialogOpen, setIsSkillDialogOpen] = useState(false);
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillLevel, setNewSkillLevel] = useState("50");
+
+  const handleAddSkill = () => {
+    const name = newSkillName.trim();
+    const level = Math.max(0, Math.min(100, parseInt(newSkillLevel) || 0));
+    if (!name) {
+      toast({ title: "Skill name required", description: "Please enter a skill name", variant: "destructive" });
+      return;
+    }
+    setSkills((prev) => [...prev, { id: Date.now(), name, level }]);
+    setNewSkillName("");
+    setNewSkillLevel("50");
+    setIsSkillDialogOpen(false);
+    toast({ title: "Skill added", description: `${name} added to your skills inventory` });
+  };
 
   const handleCoachQuery = async () => {
     if (!coachInput.trim()) {
@@ -263,10 +283,50 @@ const CareerPlanning = () => {
                       <Award className="w-5 h-5 text-secondary" />
                       <CardTitle>Skills Inventory</CardTitle>
                     </div>
-                    <Button size="sm" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      Add Skill
-                    </Button>
+                    <Dialog open={isSkillDialogOpen} onOpenChange={setIsSkillDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="gap-2">
+                          <Plus className="w-4 h-4" />
+                          Add Skill
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add a new skill</DialogTitle>
+                          <DialogDescription>
+                            Track a new professional skill and your current proficiency level.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="skill-name">Skill name</Label>
+                            <Input
+                              id="skill-name"
+                              placeholder="e.g. TypeScript"
+                              value={newSkillName}
+                              onChange={(e) => setNewSkillName(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="skill-level">Proficiency level (0-100)</Label>
+                            <Input
+                              id="skill-level"
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={newSkillLevel}
+                              onChange={(e) => setNewSkillLevel(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsSkillDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddSkill}>Add Skill</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <CardDescription>
                     Track your professional skills and proficiency levels
