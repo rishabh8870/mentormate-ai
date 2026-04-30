@@ -38,6 +38,24 @@ const CareerPlanning = () => {
   const [roadmapResponse, setRoadmapResponse] = useState("");
   const [isRoadmapLoading, setIsRoadmapLoading] = useState(false);
 
+  const [isSkillDialogOpen, setIsSkillDialogOpen] = useState(false);
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillLevel, setNewSkillLevel] = useState("50");
+
+  const handleAddSkill = () => {
+    const name = newSkillName.trim();
+    const level = Math.max(0, Math.min(100, parseInt(newSkillLevel) || 0));
+    if (!name) {
+      toast({ title: "Skill name required", description: "Please enter a skill name", variant: "destructive" });
+      return;
+    }
+    setSkills((prev) => [...prev, { id: Date.now(), name, level }]);
+    setNewSkillName("");
+    setNewSkillLevel("50");
+    setIsSkillDialogOpen(false);
+    toast({ title: "Skill added", description: `${name} added to your skills inventory` });
+  };
+
   const handleCoachQuery = async () => {
     if (!coachInput.trim()) {
       toast({
