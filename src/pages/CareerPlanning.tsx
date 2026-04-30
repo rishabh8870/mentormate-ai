@@ -42,6 +42,31 @@ const CareerPlanning = () => {
   const [newSkillName, setNewSkillName] = useState("");
   const [newSkillLevel, setNewSkillLevel] = useState("50");
 
+  const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
+  const [newGoalTitle, setNewGoalTitle] = useState("");
+  const [newGoalDeadline, setNewGoalDeadline] = useState("");
+  const [newGoalProgress, setNewGoalProgress] = useState("0");
+
+  const handleAddGoal = () => {
+    const title = newGoalTitle.trim();
+    const deadline = newGoalDeadline.trim();
+    const progress = Math.max(0, Math.min(100, parseInt(newGoalProgress) || 0));
+    if (!title) {
+      toast({ title: "Goal title required", description: "Please enter a goal title", variant: "destructive" });
+      return;
+    }
+    if (!deadline) {
+      toast({ title: "Deadline required", description: "Please enter a deadline", variant: "destructive" });
+      return;
+    }
+    setGoals((prev) => [...prev, { id: Date.now(), title, progress, deadline }]);
+    setNewGoalTitle("");
+    setNewGoalDeadline("");
+    setNewGoalProgress("0");
+    setIsGoalDialogOpen(false);
+    toast({ title: "Goal added", description: `${title} added to your career goals` });
+  };
+
   const handleAddSkill = () => {
     const name = newSkillName.trim();
     const level = Math.max(0, Math.min(100, parseInt(newSkillLevel) || 0));
@@ -203,10 +228,59 @@ const CareerPlanning = () => {
                       <Target className="w-5 h-5 text-primary" />
                       <CardTitle>Career Goals</CardTitle>
                     </div>
-                    <Button size="sm" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      Add Goal
-                    </Button>
+                    <Dialog open={isGoalDialogOpen} onOpenChange={setIsGoalDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="gap-2">
+                          <Plus className="w-4 h-4" />
+                          Add Goal
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add a new goal</DialogTitle>
+                          <DialogDescription>
+                            Define a career goal to track your progress over time.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="goal-title">Goal title</Label>
+                            <Input
+                              id="goal-title"
+                              placeholder="e.g. Get AWS Certified"
+                              value={newGoalTitle}
+                              onChange={(e) => setNewGoalTitle(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="goal-deadline">Deadline</Label>
+                            <Input
+                              id="goal-deadline"
+                              placeholder="e.g. Dec 2025"
+                              value={newGoalDeadline}
+                              onChange={(e) => setNewGoalDeadline(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="goal-progress">Initial progress (0-100)</Label>
+                            <Input
+                              id="goal-progress"
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={newGoalProgress}
+                              onChange={(e) => setNewGoalProgress(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsGoalDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddGoal}>Add Goal</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <CardDescription>
                     Set and track your professional objectives
