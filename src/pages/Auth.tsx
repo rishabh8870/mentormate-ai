@@ -30,20 +30,38 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      let email = loginIdentifier.trim();
+      const identifier = loginIdentifier.trim();
+      const password = loginPassword;
+
+      if (!identifier) throw new Error("Please enter your email or username");
+      if (!password) throw new Error("Please enter your password");
+
+      let email = identifier;
       // If input doesn't look like an email, resolve username to email
-      if (!email.includes("@")) {
+      if (!identifier.includes("@")) {
         const { data, error: rpcError } = await supabase.rpc("get_email_by_username", {
-          _username: email,
+          _username: identifier,
         });
-        if (rpcError || !data) throw new Error("No account found with that username");
+        if (rpcError) throw new Error("Could not look up username. Please try again.");
+        if (!data) throw new Error("No account found with that username");
         email = data as string;
+      } else {
+        email = identifier.toLowerCase();
       }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
-        password: loginPassword,
+        password,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.message.toLowerCase().includes("invalid")) {
+          throw new Error("Invalid email/username or password");
+        }
+        if (error.message.toLowerCase().includes("not confirmed")) {
+          throw new Error("Please verify your email before signing in");
+        }
+        throw error;
+      }
       navigate("/collaboration");
     } catch (error: any) {
       toast({ title: "Login failed", description: error.message, variant: "destructive" });
