@@ -283,10 +283,50 @@ const CareerPlanning = () => {
                       <Award className="w-5 h-5 text-secondary" />
                       <CardTitle>Skills Inventory</CardTitle>
                     </div>
-                    <Button size="sm" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      Add Skill
-                    </Button>
+                    <Dialog open={isSkillDialogOpen} onOpenChange={setIsSkillDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="gap-2">
+                          <Plus className="w-4 h-4" />
+                          Add Skill
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add a new skill</DialogTitle>
+                          <DialogDescription>
+                            Track a new professional skill and your current proficiency level.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="skill-name">Skill name</Label>
+                            <Input
+                              id="skill-name"
+                              placeholder="e.g. TypeScript"
+                              value={newSkillName}
+                              onChange={(e) => setNewSkillName(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="skill-level">Proficiency level (0-100)</Label>
+                            <Input
+                              id="skill-level"
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={newSkillLevel}
+                              onChange={(e) => setNewSkillLevel(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsSkillDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddSkill}>Add Skill</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <CardDescription>
                     Track your professional skills and proficiency levels
